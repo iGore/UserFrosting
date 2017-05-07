@@ -46,7 +46,7 @@ gulp.task('bower-install', () => {
         if (fs.existsSync(`${sprinkle}/bower.json`)) {
             console.log(`bower.json found in '${sprinkle}' Sprinkle, installing assets.`);
             shell.cd(`${sprinkle}`);
-            shell.exec(`bower install --config.directory=${vendorAssetsDir}`);
+            shell.exec(`bower install --config.directory=${vendorAssetsDir} --allow-root`);
             shell.cd(`../`);
         }
     });

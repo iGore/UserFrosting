@@ -43,7 +43,7 @@ services:
     command: -V
 
   node:
-    image: node:alpine
+    image: jujhars13/docker-node-npm-bower-gulp:latest
     volumes_from:
       - php
     working_dir: /app/build
