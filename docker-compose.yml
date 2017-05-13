@@ -10,6 +10,7 @@ services:
       - DB_NAME=userfrosting
       - DB_USER=userfrosting
       - DB_PASSWORD=password
+    working_dir: /app/app
     volumes:
       - .:/app
     links:
@@ -31,7 +32,7 @@ services:
       - MYSQL_USER=userfrosting
       - MYSQL_PASSWORD=password
     ports:
-      - 8571:3306
+      - 3306:3306
     volumes:
       - userfrosting-db:/var/lib/mysql
 
@@ -39,14 +40,19 @@ services:
     image: composer/composer
     volumes_from:
       - php
+      - mysql
     working_dir: /app/app
-    command: -V
+    links:
+      - mysql
+    command: update
 
   node:
     image: jujhars13/docker-node-npm-bower-gulp:latest
     volumes_from:
       - php
     working_dir: /app/build
+    links:
+      - php
     command: npm run uf-assets-install
 
 volumes:

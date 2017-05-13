@@ -48,6 +48,7 @@ build/bundle.result.json
 
 # Ignore temporary build assets
 build/temp
+build/shelljs_*
 
 # Ignore npm-debug.log
 build/npm-debug.log
