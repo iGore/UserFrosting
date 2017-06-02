@@ -13,6 +13,57 @@ form textarea {
   resize: vertical; /* user can resize vertically, but width is fixed */
 }
 
+/* Add some extra padding to tool groups in boxes */
+.box-tool-group {
+    padding: 10px 0 10px;
+}
+
+.box-tool-group .btn-app {
+    margin: 0 10px 10px 0;
+}
+
+.box-tool-menu {
+    background-color: #f4f4f4;
+}
+
+.box-tool-menu > li > a {
+    color: #444;
+}
+
+.box-profile {
+    padding: 10px 20px;
+}
+
+.box-profile-property {
+    float: right !important;
+}
+
+/* Styles for table column selectors */
+
+.menu-table-column-selector-title {
+    padding: 0px 20px;
+    font-weight: bold;
+}
+
+.menu-table-column-selector-options {
+    padding: 3px 20px;
+}
+
+.menu-table-column-selector-options label {
+    width: 100%;
+    font-weight: normal;
+    word-wrap: break-word;
+    word-break: break-all;
+}
+
+.menu-table-column-selector-options label span {
+    padding-left: 10px;
+}
+
+.table-search {
+    display: none;
+}
+
 /* Special wrapper for alerts on public form pages (sign-in, register, etc) */
 .form-alerts {
     margin-bottom: 10px !important;
@@ -67,4 +118,14 @@ form textarea {
 /* Fix for links on info-box */
 a .info-box {
     color: black;
+}
+
+/* Custom styling for trash buttons */
+.btn-trash {
+    padding: 0 10px;
+    color: #777;
+}
+
+.btn-trash:hover {
+    color: #d73925;
 }

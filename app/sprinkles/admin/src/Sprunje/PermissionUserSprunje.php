@@ -3,6 +3,7 @@
  * UserFrosting (http://www.userfrosting.com)
  *
  * @link      https://github.com/userfrosting/UserFrosting
+ * @copyright Copyright (c) 2013-2017 Alexander Weissman
  * @license   https://github.com/userfrosting/UserFrosting/blob/master/licenses/UserFrosting.md (MIT License)
  */
 namespace UserFrosting\Sprinkle\Admin\Sprunje;
@@ -10,33 +11,31 @@ namespace UserFrosting\Sprinkle\Admin\Sprunje;
 use Illuminate\Database\Capsule\Manager as Capsule;
 use UserFrosting\Sprinkle\Core\Facades\Debug;
 use UserFrosting\Sprinkle\Core\Sprunje\Sprunje;
+use UserFrosting\Support\Exception\BadRequestException;
 
 /**
- * UserSprunje
+ * PermissionUserSprunje
  *
- * Implements Sprunje for the users API.
+ * Implements Sprunje for retrieving a list of users for a specified permission.
  *
  * @author Alex Weissman (https://alexanderweissman.com)
  */
-class UserSprunje extends Sprunje
+class PermissionUserSprunje extends Sprunje
 {
-    protected $name = 'users';
+    protected $name = 'permission_users';
 
     protected $sortable = [
         'name',
-        'last_activity',
         'flag_enabled',
         'status'
     ];
 
     protected $filterable = [
         'name',
-        'last_activity',
         'flag_enabled'
     ];
 
     protected $excludeForAll = [
-        'last_activity',
         'flag_enabled'
     ];
 
@@ -45,10 +44,42 @@ class UserSprunje extends Sprunje
      */
     protected function baseQuery()
     {
-        $query = $this->classMapper->createInstance('user');
+        // Requires a permission id
+        if (!isset($this->options['permission_id'])) {
+            throw new BadRequestException();
+        }
 
-        // Join user's most recent activity
-        return $query->joinLastActivity()->with('lastActivity');
+        $permission = $this->classMapper->staticMethod('permission', 'find', $this->options['permission_id']);
+
+        // If the permission doesn't exist, return 404
+        if (!$permission) {
+            throw new NotFoundException($request, $response);
+        }
+
+        // Get permission users
+        $query = $permission->users();
+
+        return $query;
+    }
+
+    /**
+     * Apply pagination based on the `page` and `size` options.
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    protected function applyPagination()
+    {
+        if (
+            ($this->options['page'] !== null) &&
+            ($this->options['size'] !== null) &&
+            ($this->options['size'] != 'all')
+        ) {
+            $offset = $this->options['size']*$this->options['page'];
+            $this->query = $this->query
+                            ->withLimit($this->options['size'])->withOffset($offset);
+        }
+
+        return $this->query;
     }
 
     /**
@@ -66,22 +97,13 @@ class UserSprunje extends Sprunje
     }
 
     /**
-     * Filter LIKE the last activity description.
+     * Get the unpaginated count of items (after filtering) in this query.
      *
-     * @param Builder $query
-     * @param mixed $value
-     * @return Builder
+     * @return int
      */
-    protected function filterLastActivity($query, $value)
+    protected function countFiltered()
     {
-        // Split value on separator for OR queries
-        $values = explode($this->orSeparator, $value);
-        return $query->where(function ($query) use ($values) {
-            foreach ($values as $value) {
-                $query = $query->orLike('activities.description', $value);
-            }
-            return $query;
-        });
+        return $this->count();
     }
 
     /**
@@ -103,18 +125,6 @@ class UserSprunje extends Sprunje
             }
             return $query;
         });
-    }
-
-    /**
-     * Sort based on last activity time.
-     *
-     * @param Builder $query
-     * @param string $direction
-     * @return Builder
-     */
-    protected function sortLastActivity($query, $direction)
-    {
-        return $query->orderBy('activities.occurred_at', $direction);
     }
 
     /**

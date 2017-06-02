@@ -1,5 +1,40 @@
 # Change Log
 
+## v.4.0.21-Alpha
+- Implement reflow and column selector for tables (#670)
+- Overhauled ufAlerts, improving efficiency, reliability, and fixed a discovered edge case that caused `render` to never complete. (part of #646)
+- ufAlerts will only auto-scroll when outside the viewport (even if only partially). Can be overriden with `scrollWhenVisible: true`. (#714)
+- Rebased ufCollection, and ufForm with new jQuery plugin template. (part of #646)
+- Misc UI update
+- Added Twig blocks
+- Fix issue with duplicate query logs when using multiple databases
+
+## v4.0.20-Alpha
+- Remove pivot columns from pagination subquery in BelongsToManyThrough, to deal with MySQL's `only_full_group_by` warning
+
+## v4.0.19-Alpha
+- Explicit column names in new user permissions relations
+
+## v4.0.18-Alpha
+- Permission info page (#638)
+- New custom relationships 'BelongsToManyThrough', 'BelongsToManyUnique', 'BelongsToManyConstrained', 'HasManySyncable', 'MorphManySyncable'
+- Change implementation of User::permissions() to use BelongsToManyThrough
+- New ufForm options: setting reqParams, encType, submittingText
+- ufCollection now triggers a check for virgin rows when _any_ control is touched 
+- Fix issue with Sprunje when generating CSV with empty child collections (#697)
+- Authorizer now correctly interprets string literals (#482)
+- Authorizer now correctly interprets numeric types in access conditions.  **Caution**: this causes the `equals()` callback to return true in situations where it would have (incorrectly) returned false before.  For example, `equals(self.group_id,2)` would have returned false for users in group 2, because it was interpreting `2` as a string and then performing its strict comparison.  It now (correctly) returns true.  Notice that `equals(self.group_id,'2')`, on the other hand, will now return `false`.
+- User object caches permissions loaded from DB to reduce number of queries (#612)
+- Type declarations in authorization classes (#652)
+- Fix issue with Twig debug (#356)
+- Show disabled/unactivated badges on user info page
+
+## v4.0.17-Alpha
+- Add IIS config file (#371)
+- New ufCollection now supports free text input mode
+- New design and layout for user, group, and role summary boxes (also fixes #703)
+- Registration page returns 404 when registration disabled (#705)
+
 ## v4.0.16-Alpha
 - Add Docker configuration files
 - Begin work on Bakery, the command-line debug tool

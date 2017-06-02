@@ -60,7 +60,8 @@ return [
         "NAME_EXPLAIN"  => "Please enter a name for the group",
         "NOT_EMPTY"     => "You can't do that because there are still users associated with the group <strong>{{name}}</strong>.",
         "PAGE_DESCRIPTION" => "A listing of the groups for your site.  Provides management tools for editing and deleting groups.",
-        "UPDATE"           => "Details updated for group <strong>{{name}}</strong>"
+        "SUMMARY"       => "Group Summary",
+        "UPDATE"        => "Details updated for group <strong>{{name}}</strong>"
     ],
 
     "MANUALLY_ACTIVATED"    => "{{user_name}}'s account has been manually activated",
@@ -75,9 +76,14 @@ return [
 
         "ASSIGN_NEW"        => "Assign new permission",
         "HOOK_CONDITION"    => "Hook/Conditions",
+        "ID"                => "Permission ID",
+        "INFO_PAGE"         => "Permission information page for '{{name}}'",
         "MANAGE"            => "Manage permissions",
+        "NOTE_READ_ONLY"    => "<strong>Please note:</strong> permissions are considered \"part of the code\" and cannot be modified through the interface.  To add, remove, or modify permissions, the site maintainers will need to use a <a href=\"https://learn.userfrosting.com/database/extending-the-database\" target=\"about:_blank\">database migration.</a>",
         "PAGE_DESCRIPTION"  => "A listing of the permissions for your site.  Provides management tools for editing and deleting permissions.",
-        "UPDATE"            => "Update permissions"
+        "SUMMARY"           => "Permission Summary",
+        "UPDATE"            => "Update permissions",
+        "VIA_ROLES"         => "Has permission via roles"
     ],
 
     "ROLE" => [
@@ -101,6 +107,7 @@ return [
         "NAME_IN_USE"   => "A role named <strong>{{name}}</strong> already exist",
         "PAGE_DESCRIPTION"  => "A listing of the roles for your site.  Provides management tools for editing and deleting roles.",
         "PERMISSIONS_UPDATED" => "Permissions updated for role <strong>{{name}}</strong>",
+        "SUMMARY"       => "Role Summary",
         "UPDATED"       => "Details updated for role <strong>{{name}}</strong>"
     ],
 
@@ -116,6 +123,8 @@ return [
         "UF_VERSION"    => "UserFrosting version",
         "URL"           => "Site root url"
     ],
+
+    "TOGGLE_COLUMNS" => "Toggle columns",
 
     "USER" => [
         1 => "User",
@@ -137,9 +146,11 @@ return [
         "EDIT"              => "Edit user",
         "ENABLE"            => "Enable user",
         "INFO_PAGE"         => "User information page for {{name}}",
+        "LATEST"            => "Latest Users",
         "PAGE_DESCRIPTION"  => "A listing of the users for your site.  Provides management tools including the ability to edit user details, manually activate users, enable/disable users, and more.",
-        "LATEST"    => "Latest Users",
-        "VIEW_ALL"  => "View all users"
+        "SUMMARY"           => "Account Summary",
+        "VIEW_ALL"          => "View all users",
+        "WITH_PERMISSION"   => "Users with this permission"
     ],
     "X_USER" => [
         0 => "No users",
