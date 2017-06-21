@@ -81,11 +81,13 @@
         var lateDefaults = {
             dropdownControl: this.$element.find('.js-select-new'),
             rowContainer: this.$element.find('tbody').first()
-        }
+        };
         this.settings = $.extend(true, {}, defaults, lateDefaults, options);
         this._defaults = defaults;
         this._name = pluginName;
 
+        // Detect changes to element attributes
+        this.$element.attrchange({ callback: function (event) { this.element = event.target; }.bind(this) });
 
         // Internal counter for adding rows to the collection.  Gets updated every time `addRow` is called.
         this._rownum = 0;
@@ -243,7 +245,7 @@
             this.$element.trigger('rowTouch.ufCollection', row);
 
             // If we're not using dropdowns, assert that the table doesn't already have a virgin row.  If not, create a new virgin row.
-            if (this.settings.useDropdown) {
+            if (!this.settings.useDropdown) {
                 var virginRows = this.settings.rowContainer.find('.uf-collection-row-virgin').length;
                 if (!virginRows) {
                     this._createVirginRow();
