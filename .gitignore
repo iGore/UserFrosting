@@ -14,8 +14,8 @@ _meta/*
 app/.env
 
 # Ignore composer-generated files
-app/composer.lock
-app/composer.phar
+composer.lock
+composer.phar
 
 # Ignore log, cache, and sessions directories
 app/cache/*
@@ -31,7 +31,8 @@ app/sessions/*
 /app/sprinkles/*/assets/vendor/
 
 # Ignore sprinkles.json config file
-# app/sprinkles/sprinkles.json
+app/sprinkles/sprinkles.json
+
 
 # Ignore sample site sprinkle
 app/sprinkles/site-dev
@@ -62,3 +63,5 @@ public/css/min/*
 
 # Ignore personal config files (v0.3.x)
 app/config-userfrosting.php
+
+app/database/userfrosting.db

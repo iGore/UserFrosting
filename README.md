@@ -15,6 +15,3 @@ for first run open a new `bash`
 
 * docker-compose exec php
 * composer migrate
-
-
-* click [http://localhost:8570](http://localhost:8570)
