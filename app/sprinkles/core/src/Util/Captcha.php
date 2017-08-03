@@ -49,7 +49,7 @@ class Captcha
         $this->key = $key;
 
         if (!$this->session->has($key)) {
-            $this->session[$key] = array();
+            $this->session[$key] = $this;
         }
     }
 
