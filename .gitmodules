@@ -1,4 +1,4 @@
 [submodule "app/sprinkles/portal"]
 	path = app/sprinkles/portal
 	url = git@github.com:dohack-io/portal.git
-	branch = feature/userfrosting-4.0
+	branch = dev

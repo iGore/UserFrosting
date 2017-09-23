@@ -218,7 +218,7 @@ class ServicesProvider
             }
 
             // Get configuration mode from environment
-            $mode = getenv("UF_MODE") ?: '';
+            $mode = getenv('UF_MODE') ?: '';
 
             // Construct and load config repository
             $builder = new ConfigPathBuilder($c->locator, 'config://');
@@ -240,27 +240,14 @@ class ServicesProvider
                 $config['site.uri.public'] = trim($public, '/');
             }
 
-            // Add asset URLs to the CSRF blacklist
+            // Hacky fix to prevent sessions from being hit too much: ignore CSRF middleware for requests for raw assets ;-)
+            // See https://github.com/laravel/framework/issues/8172#issuecomment-99112012 for more information on why it's bad to hit Laravel sessions multiple times in rapid succession.
             $csrfBlacklist = $config['csrf.blacklist'];
-            $csrfBlacklist['^' . $config['assets.raw.path']] = [
+            $csrfBlacklist['^/' . $config['assets.raw.path']] = [
                 'GET'
             ];
 
             $config->set('csrf.blacklist', $csrfBlacklist);
-
-            if (isset($config['display_errors'])) {
-                ini_set("display_errors", $config['display_errors']);
-            }
-
-            // Configure error-reporting
-            if (isset($config['error_reporting'])) {
-                error_reporting($config['error_reporting']);
-            }
-
-            // Configure time zone
-            if (isset($config['timezone'])) {
-                date_default_timezone_set($config['timezone']);
-            }
 
             return $config;
         };

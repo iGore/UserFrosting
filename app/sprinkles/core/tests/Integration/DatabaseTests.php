@@ -655,6 +655,124 @@ class DatabaseTests extends TestCase
         $this->assertBelongsToManyThroughForAlex($usersWithPermissions[1]['permissions']);
     }
 
+    public function testQueryExclude()
+    {
+        $this->generateRoles();
+        $this->generateJobs();
+        $job = EloquentTestJob::exclude('location_id', 'title')->first();
+        
+        $this->assertEquals([
+            'role_id' => 2,
+            'user_id' => 1
+        ], $job->toArray());
+    }
+
+
+    public function testQueryExcludeOnJoinedTable()
+    {
+        $this->generateRolesWithPermissions();
+
+        $user = EloquentTestUser::create(['name' => 'David']);
+
+        $user->roles()->attach([1,2]);
+
+        $users = EloquentTestUser::with(['permissions' => function ($query) {
+            $query->exclude('slug');
+        }])->get();
+        
+        $this->assertEquals([
+            [
+                'id' => 1,
+                'name' => 'David',
+                'permissions' => [
+                    [
+                        'id' => 1,
+                        'pivot' => [
+                            'user_id' => 1,
+                            'permission_id' => 1
+                        ]
+                    ],
+                    [
+                        'id' => 2,
+                        'pivot' => [
+                            'user_id' => 1,
+                            'permission_id' => 2
+                        ]
+                    ],
+                    [
+                        'id' => 3,
+                        'pivot' => [
+                            'user_id' => 1,
+                            'permission_id' => 3
+                        ]
+                    ]
+                ]
+            ]
+        ], $users->toArray());
+    }
+
+    public function testQueryExcludeUseQualifiedNamesOnJoinedTable()
+    {
+        $this->generateRolesWithPermissions();
+
+        $user = EloquentTestUser::create(['name' => 'David']);
+
+        $user->roles()->attach([1,2]);
+
+        $users = EloquentTestUser::with(['roles' => function ($query) {
+            $query->addSelect('roles.*', 'jobs.*')->leftJoin('jobs', 'jobs.role_id', '=', 'roles.id')
+                    ->exclude('slug', 'jobs.user_id', 'jobs.location_id', 'jobs.role_id');
+        }])->get();
+
+        $this->assertEquals([
+            [
+                'id' => 1,
+                'name' => 'David',
+                'roles' => [
+                    [
+                        'id' => 1,
+                        'title' => null,
+                        'pivot' => [
+                            'user_id' => 1,
+                            'role_id' => 1
+                        ]
+                    ],
+                    [
+                        'id' => 2,
+                        'title' => null,
+                        'pivot' => [
+                            'user_id' => 1,
+                            'role_id' => 2
+                        ]
+                    ]
+                ]
+            ]
+        ], $users->toArray());
+    }
+
+    public function testQueryExcludeWildcard()
+    {
+        $this->generateRoles();
+        $this->generateJobs();
+        $job = EloquentTestJob::select('*')->addSelect('user_id')->exclude('*')->first();
+
+        $this->assertEquals([
+            'user_id' => 1
+        ], $job->toArray());
+
+        $job = EloquentTestJob::select('jobs.*')->addSelect('user_id')->exclude('*')->first();
+
+        $this->assertEquals([
+            'user_id' => 1
+        ], $job->toArray());
+
+        $job = EloquentTestJob::select('*')->addSelect('user_id')->exclude('jobs.*')->first();
+
+        $this->assertEquals([
+            'user_id' => 1
+        ], $job->toArray());
+    }
+
     /**
      * Helpers...
      */
@@ -1151,4 +1269,12 @@ class EloquentTestJob extends EloquentTestModel
 {
     protected $table = 'jobs';
     protected $guarded = [];
+
+    /**
+     * Get the role for this job.
+     */
+    public function role()
+    {
+        return $this->belongsTo('UserFrosting\Tests\Integration\EloquentTestRole', 'role_id');
+    }
 }
